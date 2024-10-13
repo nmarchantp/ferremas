@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Productos</h2>
+<ul>
+    {% for producto in object_list %}
+        <li>
+            <a href="{% url 'producto-detail' producto.pk %}">{{ producto.nombre_producto }}</a> - {{ producto.categoria_producto }}
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'producto-create' %}">Crear Nuevo Producto</a>
+{% endblock %}

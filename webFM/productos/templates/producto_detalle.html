@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if object %}
+        <h2>Detalles de {{ object.nombre_producto }}</h2>
+        <p>Código: {{ object.codigo_interno }}</p>
+        <p>Precio: ${{ object.precio_producto }}</p>
+        <p>Estado: {{ object.estado_producto|yesno:"Activo,Inactivo" }}</p>
+        <p>Categoría: {{ object.categoria_producto.nombre_categoria }}</p>
+        <a href="{% url 'producto-list' %}">Volver a la lista de productos</a>
+        <a href="{% url 'producto-update' object.pk %}">Editar</a>
+        <a href="{% url 'producto-delete' object.pk %}">Eliminar</a>
+    {% else %}
+        <p>Producto no encontrado.</p>
+        <a href="{% url 'producto-list' %}">Volver a la lista de productos</a>
+    {% endif %}
+{% endblock %}

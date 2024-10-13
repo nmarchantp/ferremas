@@ -16,13 +16,13 @@ Including another URLconf
 """
 # webFM/urls.py
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.inicio, name='inicio'),
-    path('producto/', views.productos, name='producto'),
+    path('productos/', include('productos.urls')),
     path('catalogo/', views.catalogo, name='catalogo'),
     path('contacto/', views.contacto, name='contacto'),
 ]

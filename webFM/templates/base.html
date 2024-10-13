@@ -10,14 +10,20 @@
     <nav>
         <ul>
             <li><a href="{% url 'inicio' %}">Inicio</a></li>
-            <li><a href="{% url 'producto' %}">Productos</a></li>
-            <li><a href="{% url 'catalogo' %}">Catálogo</a></li>
+            <li><a href="{% url 'producto-list' %}">Productos</a></li>
+            <li><a href="{% url 'categoria-list' %}">Categorías</a></li>
             <li><a href="#">Contacto</a></li>
         </ul>
-        <div class="buscador-container">
+        <div>
+            <form action="{% url 'buscar-producto' %}" method="get">
+                <input type="text" name="codigo" placeholder="Buscar código de producto">
+                <button type="submit">🔍</button>
+            </form>
+        </div>
+        {% comment %} <div class="buscador-container">
             <input type="text" id="searchInput" placeholder="Buscar producto...">
             <button id="searchBtn">🔍</button>
-        </div>
+        </div> {% endcomment %}
     </nav>
 
     <!-- Contenido Principal -->
