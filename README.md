@@ -42,6 +42,7 @@ pip install -r requirements.txt
 ### 4. Migrar la Base de Datos
 
 python manage.py makemigrations
+
 python manage.py migrate
 
 ### 5. Carga los datos iniciales
