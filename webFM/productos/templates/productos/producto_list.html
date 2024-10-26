@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <title>Lista de Productos</title>
+</head>
+<body>
+    <header>
+        <h1>Productos</h1>
+        <div>
+            Carrito: {{ cart_count }} artículos
+        </div>
+    </header>
+    
+    <main>
+        <ul>
+            {% for producto in productos %}
+                <li>
+                    <h2>{{ producto.nombre }}</h2>
+                    <p>Descripción: {{ producto.descripcion }}</p>
+                    <p>Precio: {{ producto.precio }}</p>
+                    <form method="POST" action="{% url 'agregar_a_carrito' producto.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Agregar al carrito</button>
+                    </form>
+                </li>
+            {% empty %}
+                <li>No hay productos disponibles.</li>
+            {% endfor %}
+        </ul>
+    </main>
+</body>
+</html>
+

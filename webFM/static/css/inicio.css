@@ -1,0 +1,91 @@
+/* Reset de márgenes y padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos del hero */
+.hero {
+    background-image: url('../images/hero-background.jpg'); /* Asegúrate de tener una imagen de fondo atractiva */
+    background-size: cover;
+    background-position: center;
+    height: 100vh; /* Altura completa de la ventana */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.hero h1 {
+    font-size: 3em; /* Tamaño de fuente grande para el título */
+    margin-bottom: 10px;
+}
+
+.hero p {
+    font-size: 1.2em; /* Tamaño de fuente del párrafo */
+    margin-bottom: 20px;
+}
+
+.btn-primary {
+    background-color: #007BFF; /* Color de fondo del botón */
+    color: white; /* Color del texto del botón */
+    padding: 10px 20px; /* Relleno del botón */
+    text-decoration: none; /* Sin subrayado */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background-color 0.3s ease; /* Transición suave */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Color de fondo en hover */
+}
+
+/* Estilos de las características */
+.features {
+    display: flex;
+    padding: 50px 20px; /* Padding lateral */
+    padding-top: 100px; /* Ajusta este valor según lo necesario */
+    justify-content: space-around; /* Espacio entre los elementos */
+    background-color: #f8f9fa; /* Fondo claro para la sección de características */
+}
+
+.feature-item {
+    max-width: 300px; /* Ancho máximo para cada ítem */
+    text-align: center;
+}
+
+.feature-item h2 {
+    font-size: 1.5em; /* Tamaño de fuente para los encabezados */
+    margin-bottom: 10px;
+}
+
+.feature-item p {
+    font-size: 1em; /* Tamaño de fuente para los párrafos */
+}
+
+/* Estilos de menú categoria inicio */
+.card {
+    margin-top: 20px;
+    margin-bottom: 120px;
+    height: 70%;
+}
+
+.list-group-item {
+    font-size: 1.1em; /* Aumentar tamaño de fuente */
+    white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
+    overflow: hidden; /* Evitar desbordamiento */
+    text-overflow: ellipsis; /* Mostrar puntos suspensivos si el texto es muy largo */
+}
+
+.carousel-inner {
+    display: flex; /* Asegúrate de que las items se alineen correctamente */
+}
+
+
+.card-img-top {
+    object-fit: cover; /* Ajusta la imagen para cubrir el área de la tarjeta */
+    height: 200px; /* Establece una altura fija para las imágenes */
+}
+

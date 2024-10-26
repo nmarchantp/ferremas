@@ -1,12 +1,45 @@
 {% extends 'base.html' %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/productos.css' %}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Carga jQuery -->
+<script src="{% static 'js/base.js' %}"></script> <!-- Asegúrate de que tu base.js esté cargado -->
+
 {% block content %}
 <h2>Productos</h2>
-<ul>
+<div class="row">
     {% for producto in object_list %}
-        <li>
-            <a href="{% url 'producto-detail' producto.pk %}">{{ producto.nombre_producto }}</a> - {{ producto.categoria_producto }}
-        </li>
+        <div class="col-md-4 mb-3">
+            <div class="card producto-card">
+                {% if producto.imagen_producto %}
+                    <img src="{{ producto.imagen_producto.url }}" alt="{{ producto.nombre_producto }}" class="card-img-top img-fluid">
+                {% else %}
+                    <div class="card-img-top" style="height: 200px; background-color: #f8f9fa; display: flex; align-items: center; justify-content: center;">
+                        <p>No hay imagen disponible.</p>
+                    </div>
+                {% endif %}
+                <div class="card-body">
+                    <p class="card-text">{{ producto.categoria_producto }}</p>
+                    <h5 class="card-title">
+                        <a href="{% url 'producto-detail' producto.pk %}">{{ producto.nombre_producto }}</a>
+                    </h5>
+
+                    {% if not request.user.is_authenticated or not request.user.is_staff %}
+                        <button class="btn btn-primary btn-agregar" data-id="{{ producto.id_producto }}">Agregar al carrito</button>
+                    {% endif %}
+
+                    {% if request.user.is_staff %}
+                        <a href="{% url 'producto-delete' producto.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>No hay productos disponibles.</p>
     {% endfor %}
-</ul>
-<a href="{% url 'producto-create' %}">Crear Nuevo Producto</a>
+</div>
+
+{% if request.user.is_staff %}
+    <a href="{% url 'producto-create' %}" class="btn btn-primary mt-3">Crear Nuevo Producto</a>
+{% endif %}
 {% endblock %}

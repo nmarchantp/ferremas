@@ -1,24 +1,30 @@
 {% extends 'base.html' %}
+{% load static %}  {# Carga el tag estático #}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/categoria.css' %}">  {# Carga tu CSS específico aquí #}
+{% endblock %}
 
 {% block content %}
-<h2>Detalles de {{ object.nombre_categoria }}</h2>
-<p>{{ object.nombre_categoria }}</p>
+    <h2>Detalles de {{ object.nombre_categoria }}</h2>
+    <p>{{ object.nombre_categoria }}</p>
 
-<!-- Links para editar y eliminar la categoría -->
-<a href="{% url 'categoria-update' object.pk %}">Editar</a>
-<a href="{% url 'categoria-delete' object.pk %}">Eliminar</a>
-<a href="{% url 'categoria-list' %}">Volver al listado</a>
+    <!-- Solo mostrar los enlaces de edición y eliminación si el usuario es administrador -->
+    {% if user.is_authenticated and user.is_staff %}
+        <a href="{% url 'categoria-update' object.pk %}">Editar</a>
+        <a href="{% url 'categoria-delete' object.pk %}">Eliminar</a>
+    {% endif %}
+    <a href="{% url 'categoria-list' %}">Volver al listado</a>
 
-<!-- Mostrar productos relacionados -->
-<h3>Productos en esta categoría:</h3>
-<ul>
-    {% for producto in productos %}
-        <li>
-            <strong>{{ producto.nombre_producto }}</strong> - ${{ producto.precio_producto }}
-            <a href="{% url 'producto-detail' producto.pk %}">Ver detalles</a>
-        </li>
-    {% empty %}
-        <li>No hay productos en esta categoría.</li>
-    {% endfor %}
-</ul>
+    <!-- Mostrar productos relacionados -->
+    <h3>Productos en esta categoría:</h3>
+    <ul>
+        {% for producto in productos %}
+            <li>
+                <strong>{{ producto.nombre_producto }}</strong> - ${{ producto.precio_producto }}
+            </li>
+        {% empty %}
+            <li>No hay productos en esta categoría.</li>
+        {% endfor %}
+    </ul>
 {% endblock %}

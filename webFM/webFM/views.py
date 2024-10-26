@@ -1,8 +1,9 @@
-
 from django.shortcuts import render
+from productos.models import Producto  # Asegúrate de tener esta importación
 
 def inicio(request):
-    return render(request, 'inicio.html')
+    productos = Producto.objects.all()  # Obtener todos los productos
+    return render(request, 'inicio.html', {'productos': productos})
 
 def productos(request):
     return render(request, 'productos/producto.html')
@@ -12,3 +13,6 @@ def catalogo(request):
 
 def contacto(request):
     return render(request, 'contacto.html')
+
+def ingreso(request):
+    return render(request, 'ingreso.html')

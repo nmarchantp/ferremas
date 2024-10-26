@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<h2>{% if object %}Editar Producto{% else %}Crear Producto{% endif %}</h2>
-<form method="post">
+<h2>{% if object %}Editar{% else %}Crear{% endif %} Producto</h2>
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form.as_p }}  <!-- Esto renderiza todos los campos del formulario -->
     <button type="submit">Guardar</button>
 </form>
 <a href="{% url 'producto-list' %}">Cancelar</a>

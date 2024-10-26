@@ -1,0 +1,44 @@
+.titulo {
+    text-align: center; /* Centrar el texto */
+    font-size: 2em; /* Ajustar el tamaño de la fuente según sea necesario */
+    white-space: nowrap; /* Evitar que el texto se divida en dos líneas */
+    overflow: hidden; /* Ocultar cualquier desbordamiento */
+    text-overflow: ellipsis; /* Añadir puntos suspensivos si el texto es demasiado largo */
+}
+
+h1{
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+}
+
+p{
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    white-space: nowrap;
+}
+
+.mb-4{
+    text-wrap: auto;
+}
+
+button{
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+
+}
+
+.form-check {
+    display: flex; /* Usar flexbox para alinear los elementos */
+    align-items: center; /* Alinear verticalmente el checkbox y el texto */
+}
+
+.form-check input[type="checkbox"] {
+    margin-right: 5px; /* Espacio entre el checkbox y el texto */
+}
+

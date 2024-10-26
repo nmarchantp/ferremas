@@ -32,7 +32,7 @@ python -m venv env
 ## Activa el entorno virtual
 
 cd env
-cd Script
+cd Scripts
 .\activate
 
 ### 3. Instalar Dependencias
