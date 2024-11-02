@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% comment %} pagina que contiene la lista de productos en el carrito {% endcomment %}
+{% block title %}Carro{% endblock %}
+
+{% block content %}
+
+<h5>Carro de Compras</h5>
+<ul>
+    {% for producto in productos %}
+        <li>
+            <img src="{{ producto.imagen_producto.url }}" alt="{{ producto.nombre }}" width="30" height="30">
+            {{ producto.nombre }} x {{ cantidad_por_producto|get_item:producto.id_producto }}
+            - ${{ producto.precio_producto * cantidad_por_producto|get_item:producto.id_producto }} CLP
+        </li>
+    {% endfor %}
+</ul>
+
+<p>Total en CLP: ${{ total_carrito }} CLP</p>
+<p>Total en USD: ${{ total_dolares }} USD</p>
+<button class="btn btn-primary w-100">Ir al carrito</button>
+
+
+{% endblock %}

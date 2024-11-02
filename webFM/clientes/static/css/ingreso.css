@@ -1,0 +1,130 @@
+/* Estilos Generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #FFFFFF; /* Fondo blanco */
+    color: #0B192C;
+}
+
+/* Navbar */
+nav.navbar {
+    background-color: #1E3E62;
+    color: #FFFFFF;
+}
+
+nav .navbar-brand {
+    color: #FF6500;
+    font-weight: bold;
+}
+
+nav .nav-link {
+    color: #FFFFFF;
+    font-weight: 500;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+nav .nav-link:hover {
+    background-color: #0B192C;
+    color: #FF6500;
+    border-radius: 5px;
+}
+
+/* Contenedor de formulario de inicio de sesión */
+.container {
+    max-width: 400px;
+    margin-top: 100px;
+    background-color: #F5F5F5;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #1E3E62;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+p {
+    color: #0B192C;
+}
+
+.alert-danger {
+    background-color: #FF6500;
+    color: #FFFFFF;
+    border: none;
+}
+
+/* Inputs y labels */
+.form-label {
+    color: #0B192C;
+}
+
+.form-control {
+    border: 1px solid #1E3E62;
+    border-radius: 5px;
+    padding: 8px;
+    background-color: #FFFFFF;
+}
+
+.form-control:focus {
+    border-color: #FF6500;
+    box-shadow: 0 0 5px rgba(255, 101, 0, 0.5);
+}
+
+/* Icono de ojo */
+.eye-icon {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: #1E3E62;
+    cursor: pointer;
+}
+
+.eye-icon:hover {
+    color: #FF6500;
+}
+
+/* Botón de Ingresar */
+.btn-primary {
+    background-color: #FF6500;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #1E3E62;
+    color: #FFFFFF;
+}
+
+/* Enlaces */
+.text-primary {
+    color: #FF6500;
+}
+
+.text-primary:hover {
+    color: #1E3E62;
+}
+
+/* Checkbox */
+.form-check-input {
+    accent-color: #FF6500;
+}
+
+.form-check-label {
+    color: #0B192C;
+}
+
+/* Footer */
+footer {
+    background-color: #0B192C;
+    color: #FFFFFF;
+    padding: 15px 0;
+}
+
+footer p {
+    margin: 0;
+    font-size: 0.9rem;
+}

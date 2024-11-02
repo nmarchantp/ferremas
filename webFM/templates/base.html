@@ -1,4 +1,3 @@
-<!-- base.html -->
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
@@ -8,9 +7,11 @@
     <title>{% block title %}Ferretería Ferremas{% endblock %}</title>
 
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    {% block head %}
+
+    {% endblock %}
 </head>
 <body>
     <!-- Navbar -->
@@ -52,19 +53,14 @@
                 </div>
 
                 <!-- Ícono del carrito de compras -->
-            {% if not user.is_authenticated or not user.is_staff %}
-                <div class="nav-item dropdown" id="carrito-btn">
-                    <a class="nav-link dropdown-toggle" id="carrito-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {% if not user.is_authenticated or not user.is_staff %}
+                <div class="nav-item">
+                    <!-- Carrito lateral (offcanvas) -->
+                    <a class="nav-link" data-bs-toggle="offcanvas" href="#offcanvasCarrito" role="button" aria-controls="offcanvasCarrito">
                         <i class="fas fa-shopping-cart" style="color: #ffffff; font-size: 1.5em;"></i>
                     </a>
-                    <div class="dropdown-menu" id="carrito-menu" style="display: none;">
-                        <h6 class="dropdown-header">Productos en el carrito</h6>
-                        <div id="carrito-contenido"></div>
-                        <div class="dropdown-divider"></div>
-                        <button class="btn btn-primary" id="checkout-btn">Proceder a la compra</button>
-                    </div>
                 </div>
-            {% endif %}
+                {% endif %}
             </div>
         </div>
     </nav>
@@ -74,6 +70,21 @@
         {% endblock %}
     </main>
 
+    {% comment %} off canvas que contiene  el carrito de compras {% endcomment %}
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCarrito" aria-labelledby="offcanvasCarritoLabel">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasCarritoLabel">Carro de Compras</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <hr>
+        <div class="offcanvas-body" id="carritoContenido">
+            <!-- Aquí se cargará dinámicamente el contenido del carrito -->
+        </div>
+    </div>
+    
+
+    <!-- Modal de registro -->
     <div class="modal fade" id="registrationModal" tabindex="-1" aria-labelledby="registrationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -115,5 +126,6 @@
     <script src="{% static 'js/base.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

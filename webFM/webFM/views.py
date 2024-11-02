@@ -1,8 +1,13 @@
 from django.shortcuts import render
-from productos.models import Producto  # Asegúrate de tener esta importación
+from productos.models import Producto 
 
 def inicio(request):
-    productos = Producto.objects.all()  # Obtener todos los productos
+    try:
+        productos = Producto.objects.all()
+        print("Productos obtenidos:", productos)
+    except Exception as e:
+        print(f"Error al obtener productos: {e}")
+        productos = []
     return render(request, 'inicio.html', {'productos': productos})
 
 def productos(request):

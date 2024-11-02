@@ -1,100 +1,236 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Inicializa botones y formularios
-    const loginLink = document.getElementById('login-link');
-    const registrationForm = document.getElementById('registrationModal');
+document.addEventListener('DOMContentLoaded', function () {
+    const carrito = JSON.parse(localStorage.getItem('carrito')) || {}; // Cargar carrito desde localStorage o inicializar vacío
+    const carritoContenido = document.getElementById('carritoContenido');
+    const carritoOffcanvasElement = document.getElementById('offcanvasCarrito');
+    const carritoOffcanvas = new bootstrap.Offcanvas(carritoOffcanvasElement); // Inicializar el offcanvas de Bootstrap
 
-    // Verifica si el loginLink existe
-    if (loginLink) {
-        loginLink.addEventListener('click', function(event) {
-            event.preventDefault();
-            const modal = new bootstrap.Modal(registrationForm);
-            modal.show();
-        });
+    // Eliminar manualmente el backdrop cuando el offcanvas se oculta
+    carritoOffcanvasElement.addEventListener('hidden.bs.offcanvas', function () {
+        document.querySelectorAll('.offcanvas-backdrop').forEach(backdrop => backdrop.remove());
+    });
+
+    // Guardar el carrito en localStorage
+    function guardarCarrito() {
+        localStorage.setItem('carrito', JSON.stringify(carrito)); // Guardar el carrito en localStorage
     }
 
-    // Manejo del carrito
-    const carrito = {}; // Cambiado a un objeto para manejar las cantidades
-    const carritoContenido = document.getElementById('carrito-contenido');
-    const carritoMenu = document.getElementById('carrito-menu');
-    const carritoToggle = document.getElementById('carrito-toggle');
-
-    let carritoAbierto = false; // Variable de estado para el menú del carrito
-
-    // Mapeo de productos (incluyendo imagen)
-    const productos = {
-        "1": { nombre: "Grifo de cocina", imagen: "/media/producto/grifo-negro-cocina-berna.jpg" },
-        "2": { nombre: "Pintura lavable blanca", imagen: "/media/producto/cerecita.jpg" },
-        "3": { nombre: "Manguera de Jardín", imagen: "/media/producto/manguera_tramontina.jpg" },
-        "4": { nombre: "Tornillo fijación", imagen: "/media/producto/tornillo_fijacion.jpg" },
-        "5": { nombre: "Baldosa Cerámica", imagen: "/media/producto/ceramica_cordillera.jpg" },
-        "6": { nombre: "Producto 6", imagen: "/media/producto/producto_6.jpg" },
-        "7": { nombre: "Producto 7", imagen: "/media/producto/producto_7.jpg" },
-        "8": { nombre: "Producto 8", imagen: "/media/producto/producto_8.jpg" }
-        // Agrega más productos según sea necesario
-    };
-
-    if (carritoToggle && carritoMenu) { // Verifica que existan los elementos
-        // Evento para mostrar/ocultar el menú del carrito al hacer clic
-        carritoToggle.addEventListener('click', function() {
-            carritoAbierto = !carritoAbierto; // Cambia el estado
-            if (carritoAbierto) {
-                carritoMenu.style.display = 'block';
-                
-                // Ajuste para asegurarse de que el carrito esté en la pantalla
-                const rect = carritoMenu.getBoundingClientRect();
-                if (rect.right > window.innerWidth) {
-                    carritoMenu.style.left = 'auto';
-                    carritoMenu.style.right = '20px';
-                }
-            } else {
-                carritoMenu.style.display = 'none';
-            }
-            mostrarCarrito(); // Muestra el contenido del carrito
-        });
+    // Función para obtener la tasa de conversión del servidor
+    async function obtenerTasaConversion(totalUSD) {
+        try {
+            const response = await fetch(`/api/convertir/?monto_usd=${totalUSD}`);
+            const data = await response.json();
+            console.log(data);
+            return data.monto_clp;
+        } catch (error) {
+            console.error("Error al obtener la tasa de conversión:", error);
+            return null;
+        }
     }
 
-    // Función para mostrar el carrito
-    function mostrarCarrito() {
-        carritoContenido.innerHTML = '<h4>Productos en el carrito:</h4>'; // Título del carrito
+    async function mostrarCarrito() {
+        if (!carritoContenido) {
+            console.error("El elemento carritoContenido no existe en el DOM.");
+            return;
+        }
+    
+        carritoContenido.innerHTML = ''; // Limpiar contenido antes de actualizar
+        let totalProductos = 0;
+        let totalValor = 0;
+    
         for (const id in carrito) {
+            const producto = carrito[id];
+    
+            // Crear contenedor de cada producto en el carrito
             const item = document.createElement('div');
             item.classList.add('carrito-item');
     
-            // Crea el elemento de imagen
-            const imagen = document.createElement('img');
-            imagen.src = productos[id].imagen; // Asigna la URL de la imagen del producto
-            imagen.alt = productos[id].nombre; // Texto alternativo
-            imagen.style.width = '50px'; // Ajusta el tamaño de la imagen
-            imagen.style.height = '50px';
-            imagen.style.objectFit = 'cover'; // Mantiene la proporción de la imagen
+            // Imagen del producto
+            const img = document.createElement('img');
+            img.src = producto.imagen_producto;
+            img.alt = producto.nombre_producto;
+            img.classList.add('img-fluid', 'carrito-img');
+            img.style.width = '120px';
+            img.style.height = '120px';
+            img.style.objectFit = 'cover';
+            img.style.borderRadius = '8px';
+            item.appendChild(img);
     
-            // Crea el texto que muestra nombre y cantidad
-            const texto = document.createElement('span');
-            texto.textContent = `${productos[id].nombre} x ${carrito[id]}`; 
+            // Contenedor para nombre y precio
+            const productoInfo = document.createElement('div');
+            productoInfo.classList.add('producto-info');
     
-            // Añade la imagen y el texto al contenedor del producto
-            item.appendChild(imagen);
-            item.appendChild(texto);
+            // Nombre del producto
+            const nombre = document.createElement('span');
+            nombre.textContent = `${producto.nombre_producto} x ${producto.cantidad}`;
+            productoInfo.appendChild(nombre);
+    
+            // Precio del producto
+            const precio = document.createElement('span');
+            precio.textContent = `Precio: $${producto.precio}`;
+            productoInfo.appendChild(precio);
+    
+            item.appendChild(productoInfo);
+    
+            // Controles de cantidad
+            const cantidadControles = document.createElement('div');
+            cantidadControles.classList.add('cantidad-controles');
+    
+            // Botón para disminuir cantidad
+            const btnDisminuir = document.createElement('button');
+            btnDisminuir.textContent = '-';
+            btnDisminuir.classList.add('btn', 'btn-sm', 'btn-danger');
+            btnDisminuir.addEventListener('click', function () {
+                if (producto.cantidad > 1) {
+                    producto.cantidad--;
+                } else {
+                    delete carrito[id];
+                }
+                guardarCarrito();
+                mostrarCarrito();
+            });
+            cantidadControles.appendChild(btnDisminuir);
+    
+            // Cantidad actual
+            const cantidad = document.createElement('span');
+            cantidad.textContent = producto.cantidad;
+            cantidadControles.appendChild(cantidad);
+    
+            // Botón para aumentar cantidad
+            const btnAumentar = document.createElement('button');
+            btnAumentar.textContent = '+';
+            btnAumentar.classList.add('btn', 'btn-sm', 'btn-success');
+            btnAumentar.addEventListener('click', function () {
+                producto.cantidad++;
+                guardarCarrito();
+                mostrarCarrito();
+            });
+            cantidadControles.appendChild(btnAumentar);
+    
+            item.appendChild(cantidadControles);
+    
+            // Botón para eliminar producto
+            const btnEliminar = document.createElement('button');
+            btnEliminar.textContent = 'Eliminar';
+            btnEliminar.classList.add('btn', 'btn-sm', 'btn-danger', 'ml-2');
+            btnEliminar.addEventListener('click', function () {
+                delete carrito[id];
+                guardarCarrito();
+                mostrarCarrito();
+            });
+            item.appendChild(btnEliminar);
     
             carritoContenido.appendChild(item);
+    
+            // Calcular el total en USD
+            totalProductos += producto.cantidad;
+            totalValor += producto.precio * producto.cantidad;
         }
-        console.log("Carrito: ", carrito);
+    
+        // Redondear el total en USD a dos decimales
+        const totalValorRedondeado = totalValor.toFixed(2);
+    
+        // Actualizar o crear el elemento para el total en USD
+        let totalElement = document.querySelector('.carrito-total');
+        if (!totalElement) {
+            totalElement = document.createElement('div');
+            totalElement.classList.add('carrito-total');
+            carritoContenido.appendChild(totalElement);
+        }
+        totalElement.textContent = `Total: $${totalValorRedondeado}`;
+    
+        // Obtener y mostrar el total en CLP
+        const totalEnCLP = await obtenerTasaConversion(totalValor);
+        let totalCLPElement = document.querySelector('.carrito-total-clp');
+        if (!totalCLPElement) {
+            totalCLPElement = document.createElement('div');
+            totalCLPElement.classList.add('carrito-total-clp');
+            carritoContenido.appendChild(totalCLPElement);
+        }
+    
+        if (totalEnCLP !== null) {
+            const totalEnCLPAbsoluto = Math.round(totalEnCLP);
+            totalCLPElement.textContent = `Total en CLP: $${totalEnCLPAbsoluto}`;
+    
+            // Crear o actualizar el botón de pago
+            let pagarButton = document.querySelector('.btn-pagar');
+            if (!pagarButton) {
+                pagarButton = document.createElement('button');
+                pagarButton.classList.add('btn', 'btn-primary', 'mt-3', 'btn-pagar');
+                pagarButton.textContent = "Pagar con Transbank";
+                carritoContenido.appendChild(pagarButton);
+            }
+    
+            // Agregar evento para iniciar el pago
+            pagarButton.onclick = () => iniciarPago(totalEnCLPAbsoluto);
+        } else {
+            console.warn("No se pudo calcular el total en pesos chilenos.");
+        }
     }
-
-    // Agregar al carrito
-    document.querySelectorAll('.btn-agregar').forEach(button => {
-        button.addEventListener('click', function() {
-            const productoId = this.getAttribute('data-id');
-            
-            if (carrito[productoId]) {
-                carrito[productoId] += 1; // Aumenta la cantidad
-                console.log(`Producto actualizado en el carrito: ${productoId}, Cantidad: ${carrito[productoId]}`);
+    
+    
+    // Función para iniciar el pago enviando el monto en CLP a la vista de Django
+    function iniciarPago(montoCLP) {
+        fetch('/api/pagar/', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value 
+            },
+            body: JSON.stringify({ amount: montoCLP })
+        })
+        .then(response => {
+            // Detectar si estamos siendo redirigidos a la página de inicio de sesión
+            if (response.redirected && response.url.includes('/clientes/ingreso/')) {
+                window.location.href = response.url;  // Redirigir a la página de inicio de sesión
+                return;
+            }
+    
+            const contentType = response.headers.get("content-type");
+            if (!response.ok) {
+                throw new Error(`Error ${response.status}: ${response.statusText}`);
+            } else if (contentType && contentType.includes("application/json")) {
+                return response.json();
             } else {
-                carrito[productoId] = 1; // Inicializa la cantidad
-                console.log("Producto agregado al carrito:", productoId);
+                throw new Error("Respuesta inesperada del servidor. Se esperaba JSON.");
+            }
+        })
+        .then(data => {
+            if (data && data.redirect_url) {
+                window.location.href = data.redirect_url;
+            } else {
+                alert("Debes registrarte antes de comprar!... Serás redireccionado");
+            }
+        })
+        .catch(error => console.error("Error al iniciar el pago:", error));
+    }
+    
+    // Cargar el carrito al cargar la página
+    mostrarCarrito();
+
+    // Evento para agregar productos al carrito
+    document.querySelectorAll('.btn-agregar').forEach(button => {
+        button.addEventListener('click', function () {
+            const productoId = this.getAttribute('data-id');
+            const productoNombre = this.parentElement.querySelector('.card-title').textContent;
+            const productoPrecio = parseFloat(this.getAttribute('data-precio'));
+            const productoImagen = this.parentElement.parentElement.querySelector('img').src;
+
+            if (carrito[productoId]) {
+                carrito[productoId].cantidad++;
+            } else {
+                carrito[productoId] = {
+                    nombre_producto: productoNombre,
+                    cantidad: 1,
+                    precio: productoPrecio,
+                    imagen_producto: productoImagen
+                };
             }
 
+            console.log(`Producto actualizado en el carrito: ${productoId}, Cantidad: ${carrito[productoId].cantidad}`);
+            guardarCarrito();
             mostrarCarrito();
+            if (carritoOffcanvas) carritoOffcanvas.show();
+
         });
     });
 });

@@ -33,6 +33,9 @@ class Producto(models.Model):
             self.codigo_interno = f"{categoria_codigo}-{numero}"
 
         super().save(*args, **kwargs)
+    
+    def get_id_producto(self):
+        return self.id_producto
 
 class Carrito(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)

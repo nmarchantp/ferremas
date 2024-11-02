@@ -17,20 +17,22 @@
     <div class="carousel-inner">
         <div class="carousel-item active">
             <img src="{% static 'img/carrusel_1.jpg' %}" class="d-block w-100" alt="Descripción de la imagen 1">
-            <div class="carousel-caption d-none d-md-block">
-                
+            <div class="carousel-caption d-none d-md-block">                
             </div>
         </div>
         <div class="carousel-item">
             <img src="{% static 'img/carrusel_2.jpg' %}" class="d-block w-100" alt="Descripción de la imagen 2">
-            <div class="carousel-caption d-none d-md-block">
-                
+            <div class="carousel-caption d-none d-md-block">               
             </div>
         </div>
         <div class="carousel-item">
             <img src="{% static 'img/carrusel_3.jpg' %}" class="d-block w-100" alt="Descripción de la imagen 3">
-            <div class="carousel-caption d-none d-md-block">
-                
+            <div class="carousel-caption d-none d-md-block">                
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'img/carrusel_4.jpg' %}" class="d-block w-100" alt="Descripción de la imagen 3">
+            <div class="carousel-caption d-none d-md-block">                
             </div>
         </div>
     </div>
@@ -64,75 +66,29 @@
             </div>
         </div>
         
-
-        <!-- Carrusel de productos -->
+        
+        <!-- Listado de productos -->
         <div class="col-md-8">
-            <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <!-- Aquí puedes agregar tus cards de productos -->
-                    <div class="carousel-item active">
-                        <div class="row">
-                            <div class="col">
-                                <div class="card">
-                                    <img src="{% static 'img/grifo-negro-cocina-berna.jpg' %}" class="card-img-top" alt="Producto 1">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Grifo cocina, Monomando de color negro marca Hoffens</h5>
-                                        <p class="card-text">Código: BC-0001</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="card">
-                                    <img src="{% static 'img/cerecita.jpg' %}" class="card-img-top" alt="Producto 2">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Pintura blanca lavable marca Cerecita</h5>
-                                        <p class="card-text">Código: PP-0001</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="card">
-                                    <img src="{% static 'img/manguera_tramontina.jpg' %}" class="card-img-top" alt="Producto 3">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Manguera verde marca Tramontina</h5>
-                                        <p class="card-text">Código: JA-0001</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="card">
-                                    <img src="{% static 'img/tornillo_fijacion.jpg' %}" class="card-img-top" alt="Producto 2">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Tornillo de fijación marca Rhona</h5>
-                                        <p class="card-text">Código: FI-0001</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="card">
-                                    <img src="{% static 'img/ceramica_cordillera.jpg' %}" class="card-img-top" alt="Producto 2">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Baldosas cerámica</h5>
-                                        <p class="card-text">Código: RV-0001</p>
-                                    </div>
-                                </div>
-                            </div>
+            <div class="row">
+                {% for producto in productos %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="{{ producto.imagen_producto.url }}" class="card-img-top" alt="Producto: {{ producto.nombre_producto }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ producto.nombre_producto }}</h5>
+                            <p class="card-text">Código: {{ producto.codigo_interno }}</p>
+                            <p class="card-text">Precio: ${{ producto.precio_producto }}</p>
+                            <!-- Botón para agregar al carrito -->
+                            <form action="{% url 'agregar_al_carrito' producto.id_producto %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Agregar al Carrito</button>
+                            </form>
                         </div>
                     </div>
-                    <!-- Puedes agregar más carruseles aquí -->
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Anterior</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Siguiente</span>
-                </button>
+                {% endfor %}
             </div>
         </div>
-    </div>
-</div>
 
 <!-- Sección de características -->
 <section class="features text-center">

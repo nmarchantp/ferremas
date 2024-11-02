@@ -83,17 +83,45 @@ def buscar_producto(request):
     return redirect('producto-list')
 
 
-def carrito(request):
-    productos_en_carrito = request.session.get('carrito', [])
-    productos = Producto.objects.filter(id_producto__in=productos_en_carrito)
+def obtener_datos_carrito(request):
+    productos_en_carrito = request.session.get('carrito', {})
+    
+    # Convertir las claves del carrito (strings) a enteros
+    productos_ids = map(int, productos_en_carrito.keys())
+    productos = Producto.objects.filter(id_producto__in=productos_ids)
 
     # Contar la cantidad de cada producto en el carrito
-    cantidad_por_producto = {producto.id: productos_en_carrito.count(producto.id) for producto in productos}
+    cantidad_por_producto = {producto.id_producto: productos_en_carrito[str(producto.id_producto)] for producto in productos}
 
-    return render(request, 'productos/carrito.html', {
+    # Calcular el total en pesos chilenos
+    total_carrito = sum(producto.precio_producto * cantidad_por_producto[producto.id_producto] for producto in productos)
+
+    # Tasa de cambio (usa la API del Banco Central si la tienes)
+    tasa_cambio_dolar = 850
+    total_dolares = total_carrito / tasa_cambio_dolar
+
+    # Devuelve la información del carrito en un diccionario
+    return {
         'productos': productos,
         'cantidad_por_producto': cantidad_por_producto,
-    })
+        'total_carrito': total_carrito,
+        'total_dolares': total_dolares,
+    }
+
+def carrito_pagina_completa(request):
+    # Llama al método para obtener los datos del carrito
+    datos_carrito = obtener_datos_carrito(request)
+    
+    # Renderiza la página completa del carrito
+    return render(request, 'productos/carrito.html', datos_carrito)
+
+def carrito_offcanvas(request):
+    # Llama al método para obtener los datos del carrito
+    datos_carrito = obtener_datos_carrito(request)
+    
+    # Renderiza solo la parte que se va a mostrar en el offcanvas
+    return render(request, 'productos/carrito_list.html', datos_carrito)
+
 
 def producto_list(request):
     # Verificar si el carrito está en la sesión, si no, inicializarlo
@@ -116,30 +144,44 @@ def producto_list(request):
 
 def agregar_al_carrito(request, producto_id):
     if request.method == 'POST':
+        # Verificar si el producto existe en la base de datos
+        producto = get_object_or_404(Producto, id_producto=producto_id)
+
         # Obtener el carrito de la sesión o crear uno nuevo
         carrito = request.session.get('carrito', {})
-        
+
+        # Convertir el producto_id a string, ya que las claves de la sesión son strings
+        producto_id_str = str(producto_id)
+
         # Aumentar la cantidad del producto en el carrito
-        if producto_id in carrito:
-            carrito[producto_id] += 1  # Aumentar la cantidad en 1
+        if producto_id_str in carrito:
+            carrito[producto_id_str] += 1  # Aumentar la cantidad en 1
         else:
-            carrito[producto_id] = 1  # Agregar el producto con cantidad 1
-        
+            carrito[producto_id_str] = 1  # Agregar el producto con cantidad 1
+
         # Guardar el carrito en la sesión
         request.session['carrito'] = carrito
-        
+        request.session.modified = True  # Marca la sesión como modificada
+
         return JsonResponse({'mensaje': 'Producto agregado al carrito.'})
+    
     return JsonResponse({'mensaje': 'Error al agregar el producto.'}, status=400)
 
+    
+
 def eliminar_producto_carrito(request, producto_id):
-    # Obtener el objeto Carrito correspondiente al producto y al usuario actual
-    carrito_item = get_object_or_404(Carrito, producto__id=producto_id, usuario=request.user)
+    carrito = request.session.get('carrito', {})
 
-    # Eliminar el objeto Carrito
-    carrito_item.delete()
+    producto_id_str = str(producto_id)
+    if producto_id_str in carrito:
+        del carrito[producto_id_str]
 
-    # Redirigir a la vista del carrito (cambia 'nombre_de_la_vista_donde_rediriges' por el nombre correcto)
-    return redirect('nombre_de_la_vista_donde_rediriges')
+        # Guardar el carrito actualizado en la sesión
+        request.session['carrito'] = carrito
+        request.session.modified = True  # Marca la sesión como modificada
+
+    return redirect('carrito')
+
 
 def obtener_producto( producto_id):
     try:

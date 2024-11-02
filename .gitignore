@@ -22,7 +22,7 @@ venv/
 staticfiles/
 
 # Media files
-media/
+# media/
 
 # VSCode configuration files
 .vscode/

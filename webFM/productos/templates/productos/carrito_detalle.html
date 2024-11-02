@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% comment %} pagina completa con productos en el carrito {% endcomment %}
+
+{% block title %}Carrito de Compras{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/carrito.css' %}"> 
+{% endblock %}
+
+
+{% block content %}
+<h1>Carrito de Compras</h1>
+<ul>
+    {% for producto in productos %}
+        <li>
+            <img src="{{ producto.imagen_producto.url }}" alt="{{ producto.nombre }}" width="50" height="50">
+            {{ producto.nombre }} x {{ cantidad_por_producto|get_item:producto.id_producto }}
+            - Precio total: ${{ producto.precio_producto * cantidad_por_producto|get_item:producto.id_producto }} CLP
+        </li>
+    {% endfor %}
+</ul>
+
+<div class="total-section">
+    <p>Total en CLP: ${{ total_carrito }} CLP</p>
+    <p>Total en USD: ${{ total_dolares }} USD</p>
+</div>
+{% endblock %}

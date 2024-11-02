@@ -1,0 +1,80 @@
+/* Contenedor de la tarjeta de producto */
+.producto-card {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #1E3E62;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #F5F5F5;
+}
+
+/* Imagen del producto */
+.producto-card .card-img-top {
+    width: 120px; /* Ancho fijo para la imagen */
+    height: 120px; /* Altura fija para la imagen */
+    object-fit: cover; /* Asegura que la imagen se recorte sin distorsionarse */
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    margin-right: 15px; /* Espacio entre la imagen y la descripción */
+}
+
+/* Contenedor de la descripción del producto */
+.producto-card .card-body {
+    flex: 1; /* Permite que la descripción ocupe el espacio restante */
+}
+
+/* Estilo para el texto de la categoría */
+.producto-card .card-text {
+    color: #FF6500;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+/* Estilo para el título del producto */
+.producto-card .card-title a {
+    color: #1E3E62;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.producto-card .card-title a:hover {
+    color: #FF6500;
+}
+
+/* Botón Agregar al Carrito */
+.btn-agregar {
+    background-color: #FF6500;
+    border: none;
+    color: #FFFFFF;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-agregar:hover {
+    background-color: #1E3E62;
+}
+
+/* Botón Eliminar (Solo para Admin) */
+.btn-danger {
+    background-color: #FF6500;
+    border: none;
+    color: #FFFFFF;
+    font-size: 0.9rem;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: #1E3E62;
+}

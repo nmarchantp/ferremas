@@ -1,91 +1,140 @@
-/* Reset de márgenes y padding */
-* {
-    margin: 0;
+/* Estilos Generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #FFFFFF; /* Fondo blanco */
+    color: #0B192C;
+}
+
+/* Carrusel */
+.carousel .carousel-indicators button {
+    background-color: #FF6500;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: #1E3E62;
+    border-radius: 50%;
+}
+
+.carousel-inner img {
+    object-fit: cover;
+    height: 400px;
+}
+
+/* Contenedor de Categorías */
+.card {
+    background-color: #F5F5F5;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.card h5.card-title {
+    color: #1E3E62;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.card-body ul.list-group {
+    list-style: none;
     padding: 0;
-    box-sizing: border-box;
 }
 
-/* Estilos del hero */
-.hero {
-    background-image: url('../images/hero-background.jpg'); /* Asegúrate de tener una imagen de fondo atractiva */
-    background-size: cover;
-    background-position: center;
-    height: 100vh; /* Altura completa de la ventana */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    text-align: center;
-    padding: 0 20px;
+.card-body .list-group-item {
+    background-color: transparent;
+    border: none;
+    color: #0B192C;
+    padding: 10px 0;
+    font-weight: 500;
 }
 
-.hero h1 {
-    font-size: 3em; /* Tamaño de fuente grande para el título */
-    margin-bottom: 10px;
+.card-body .list-group-item:hover {
+    color: #FF6500;
+    cursor: pointer;
+    text-decoration: underline;
 }
 
-.hero p {
-    font-size: 1.2em; /* Tamaño de fuente del párrafo */
-    margin-bottom: 20px;
+/* Listado de Productos */
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
 }
 
-.btn-primary {
-    background-color: #007BFF; /* Color de fondo del botón */
-    color: white; /* Color del texto del botón */
-    padding: 10px 20px; /* Relleno del botón */
-    text-decoration: none; /* Sin subrayado */
-    border-radius: 5px; /* Bordes redondeados */
-    transition: background-color 0.3s ease; /* Transición suave */
+.card-body h5.card-title {
+    color: #FF6500;
+    font-size: 1.1rem;
+    font-weight: bold;
 }
 
-.btn-primary:hover {
-    background-color: #0056b3; /* Color de fondo en hover */
+.card-body .card-text {
+    color: #1E3E62;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
 }
 
-/* Estilos de las características */
+.card-body .btn-primary {
+    background-color: #FF6500;
+    border: none;
+    color: #FFFFFF;
+    transition: background-color 0.3s ease;
+}
+
+.card-body .btn-primary:hover {
+    background-color: #1E3E62;
+    color: #FFFFFF;
+}
+
+/* Sección de Características */
 .features {
-    display: flex;
-    padding: 50px 20px; /* Padding lateral */
-    padding-top: 100px; /* Ajusta este valor según lo necesario */
-    justify-content: space-around; /* Espacio entre los elementos */
-    background-color: #f8f9fa; /* Fondo claro para la sección de características */
+    background-color: #F5F5F5;
+    padding: 40px 0;
+}
+
+.features h2 {
+    color: #1E3E62;
+    margin-bottom: 30px;
+    font-weight: bold;
 }
 
 .feature-item {
-    max-width: 300px; /* Ancho máximo para cada ítem */
-    text-align: center;
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
 }
 
-.feature-item h2 {
-    font-size: 1.5em; /* Tamaño de fuente para los encabezados */
+.feature-item i {
+    color: #FF6500;
+    margin-bottom: 15px;
+}
+
+.feature-item h3 {
+    color: #1E3E62;
+    font-size: 1.2rem;
     margin-bottom: 10px;
 }
 
 .feature-item p {
-    font-size: 1em; /* Tamaño de fuente para los párrafos */
+    color: #0B192C;
+    font-size: 0.9rem;
 }
 
-/* Estilos de menú categoria inicio */
-.card {
-    margin-top: 20px;
-    margin-bottom: 120px;
-    height: 70%;
+.feature-item:hover {
+    transform: translateY(-5px);
 }
 
-.list-group-item {
-    font-size: 1.1em; /* Aumentar tamaño de fuente */
-    white-space: nowrap; /* Evitar que el texto se divida en varias líneas */
-    overflow: hidden; /* Evitar desbordamiento */
-    text-overflow: ellipsis; /* Mostrar puntos suspensivos si el texto es muy largo */
+/* Botones de navegación del carrusel */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(1); /* Hace que el icono sea blanco */
 }
 
-.carousel-inner {
-    display: flex; /* Asegúrate de que las items se alineen correctamente */
+.carousel-indicators [data-bs-target] {
+    background-color: #FF6500;
 }
 
-
-.card-img-top {
-    object-fit: cover; /* Ajusta la imagen para cubrir el área de la tarjeta */
-    height: 200px; /* Establece una altura fija para las imágenes */
+.carousel-indicators .active {
+    background-color: #1E3E62;
 }
-

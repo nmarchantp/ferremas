@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
+{% load static %}
+{% comment %} detalle del producto {% endcomment %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/producto_detalle.css' %}"> 
+{% endblock %}
 
 {% block content %}
 {% if object %}
     <h2>Detalles de {{ object.nombre_producto }}</h2>
+    <img src="{{object.imagen_producto.url}}"></img>
     <p>Código: {{ object.codigo_interno }}</p>
     <p>Precio: ${{ object.precio_producto }}</p>
     <p>Estado: {{ object.estado_producto|yesno:"Activo,Inactivo" }}</p>
