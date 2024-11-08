@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/failure.css' %}">  {# Asegúrate de incluir tu CSS aquí #}
+{% endblock %}
+
+{% block content %}
+    <h1>Transacción Fallida</h1>
+    <p>Lo sentimos, pero tu transacción no se pudo completar.</p>
+    <p>{{ error_message }}</p>
+    <a href="/">Volver al inicio</a>
+{% endblock %}

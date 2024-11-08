@@ -93,12 +93,23 @@ def pagar(request):
 def transaccion_completa(request):
     token_ws = request.GET.get('token_ws')
     
+    # Si no se encuentra el token, muestra una página de error
     if not token_ws:
-        return HttpResponse('Error: No se encontró el token de la transacción.', status=400)
-    
+        return render(request, 'apis/failure.html', {'error_message': 'No se encontró el token de la transacción.'})
+
+    # Confirma la transacción con Transbank
     result = transaction.commit(token_ws)
     
+    # Si la transacción fue exitosa
     if result.get('status') == 'AUTHORIZED':
-        return HttpResponse('Transacción exitosa')
+        amount = result.get('amount')  # Obtén el monto de la transacción
+        return render(request, 'apis/success.html', {
+            'token_ws': token_ws,
+            'amount': amount
+        })
     else:
-        return HttpResponse(f'Error en la transacción: {result.get("status")}')
+        # Si la transacción falló, muestra una página de error con el estado
+        error_status = result.get("status")
+        return render(request, 'apis/failure.html', {
+            'error_message': f"Error en la transacción: {error_status}"
+        })

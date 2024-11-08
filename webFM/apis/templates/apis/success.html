@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/success.css' %}">  {# Asegúrate de incluir tu CSS aquí #}
+{% endblock %}
+
+{% block content %}
+    <h1>Transacción Exitosa</h1>
+    <p>Gracias por tu compra. Tu pago ha sido procesado con éxito.</p>
+    <p><strong>Token de Transacción:</strong> {{ token_ws }}</p>
+    <p><strong>Monto de la Transacción:</strong> {{ amount }} CLP</p>
+    <a href="/">Volver al inicio</a>
+{% endblock %}
+

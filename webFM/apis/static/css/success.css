@@ -1,0 +1,60 @@
+/* success.css */
+
+/* Fondo general */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #F5F8FA; /* Fondo claro */
+    color: #0B192C;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Contenedor principal */
+.success-container {
+    background-color: #FFFFFF; /* Fondo blanco */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+}
+
+/* Título */
+.success-container h1 {
+    color: #1E3E62;
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+/* Mensaje */
+.success-container p {
+    font-size: 1.1rem;
+    margin: 10px 0;
+}
+
+/* Detalles */
+.success-container strong {
+    color: #FF6500;
+}
+
+/* Botón de regreso */
+.success-container a {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #FF6500;
+    color: #FFFFFF;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.success-container a:hover {
+    background-color: #1E3E62;
+    color: #FFFFFF;
+}
