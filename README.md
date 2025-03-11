@@ -17,11 +17,11 @@ Sigue estos pasos para descargar, instalar y ejecutar el proyecto en tu máquina
 
 Primero, clona el repositorio desde GitHub:
 
-git clone https://github.com/tu-usuario/tu-repositorio.git
+git clone https://github.com/nmarchantp/ferremas.git
 
 ## Cambia al directorio del proyecto:
 
-cd tu-repositorio
+cd ferremas
 
 ### 2. Crear y Activar un Entorno Virtual
 
