@@ -21,7 +21,7 @@ git clone https://github.com/nmarchantp/ferremas.git
 
 ## Cambia al directorio del proyecto:
 
-cd ferremas
+cd webFM
 
 ### 2. Crear y Activar un Entorno Virtual
 
