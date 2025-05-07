@@ -1,67 +1,90 @@
-# Proyecto Django - Ferretería B2B
+<h1>Proyecto Django - Ferretería B2B <img src="https://github.com/user-attachments/assets/c78f78e6-bec6-44ab-a08a-f8258d0de698" alt="imagen del proyecto" width="80" height="80" />
+</h1>
+<p>
+Este es un proyecto de Django para la gestión de productos y categorías en una ferretería B2B. 
+Incluye funcionalidades para la administración de categorías, productos y un sistema de autenticación 
+para acceder al panel de administración.
+</p>
 
-Este es un proyecto de Django para la gestión de productos y categorías en una ferretería B2B. Incluye funcionalidades para la administración de categorías, productos y un sistema de autenticación para acceder al panel de administración.
+<p>
+Está desarrollado en Python (framework Django) con base de datos SQLite e integración con Banco Central y Transbank Webpay Plus.
+</p>
 
-## Requisitos Previos
+<h2>Arquitectura</h2>
+<img src="https://github.com/user-attachments/assets/b27042be-9270-442b-a409-c8e0595d6bf0" alt="arquitectura del proyecto" />
 
-- Python 3.x
-- Git
-- pip (instalador de paquetes de Python)
-- Virtualenv (opcional, pero recomendado)
+<h2>Requisitos Previos</h2>
+<ul>
+  <li>Python 3.x</li>
+  <li>Git</li>
+  <li>pip (instalador de paquetes de Python)</li>
+  <li>Virtualenv (opcional, pero recomendado)</li>
+</ul>
 
-## Instalación y Configuración
+<h2>Instalación y Configuración</h2>
 
-Sigue estos pasos para descargar, instalar y ejecutar el proyecto en tu máquina local:
+<h3>1. Clonar el Repositorio</h3>
+<pre><code>git clone https://github.com/nmarchantp/ferremas.git</code></pre>
 
-### 1. Clonar el Repositorio
+<h3>2. Cambiar al Directorio del Proyecto</h3>
+<pre><code>cd webFM</code></pre>
 
-Primero, clona el repositorio desde GitHub:
-
-git clone https://github.com/nmarchantp/ferremas.git
-
-## Cambia al directorio del proyecto:
-
-cd webFM
-
-### 2. Crear y Activar un Entorno Virtual
-
-## Crea un entorno virtual
-
+<h3>3. Crear y Activar un Entorno Virtual</h3>
+<pre><code>
 python -m venv env
-
-## Activa el entorno virtual
-
-cd env
-cd Scripts
+cd env/Scripts
 .\activate
+</code></pre>
 
-### 3. Instalar Dependencias
-
+<h3>4. Instalar Dependencias</h3>
+<pre><code>
+cd ../../webFM
 pip install -r requirements.txt
+</code></pre>
 
-### 4. Migrar la Base de Datos
-
+<h3>5. Migrar la Base de Datos</h3>
+<pre><code>
 python manage.py makemigrations
-
 python manage.py migrate
+</code></pre>
 
-### 5. Carga los datos iniciales
+<h3>6. Cargar los Datos Iniciales</h3>
+<pre><code>python load_data.py</code></pre>
 
-python load_data.py
-
-### 6. Inicia el servidor
-
-## Asegúrate de estar en la carpeta webFM
-
+<h3>7. Iniciar el Servidor</h3>
+<pre><code>
 python manage.py runserver
+</code></pre>
 
+<h2>Credenciales de Prueba</h2>
 
+<h3>Administrador</h3>
+<ul>
+  <li>Usuario: admin@example.com</li>
+  <li>Password: admin123</li>
+</ul>
 
-### Adicionales
-## Eliminar migraciones de producto
-rm productos/migrations/0*.py
-## Eliminar archivos temporales
-Get-ChildItem -Path . -Recurse -Filter "*.pyc" | Remove-Item
-## Crear requeriments.txt por codigo
-pip freeze > requirements.txt
+<h3>Cliente</h3>
+<ul>
+  <li>Usuario: cliente@example.com</li>
+  <li>Password: cliente123</li>
+</ul>
 
+<h2>Datos para Simular Compra por Transbank</h2>
+<ul>
+  <li>VISA: 4051 8856 0044 6623 — CVV 123 — Cualquier fecha — Aprobada</li>
+  <li>MASTERCARD: 5186 0595 5959 0568 — CVV 123 — Cualquier fecha — Rechazada</li>
+  <li>Redcompra: 4051 8842 3993 7763 — Aprobada (débito)</li>
+</ul>
+<p>Formulario de autenticación: usar RUT <strong>11.111.111-1</strong> y clave <strong>123</strong></p>
+
+<h2>Comandos Adicionales</h2>
+
+<h3>Eliminar migraciones de productos</h3>
+<pre><code>rm productos/migrations/0*.py</code></pre>
+
+<h3>Eliminar archivos temporales</h3>
+<pre><code>Get-ChildItem -Path . -Recurse -Filter "*.pyc" | Remove-Item</code></pre>
+
+<h3>Crear archivo requirements.txt</h3>
+<pre><code>pip freeze > requirements.txt</code></pre>
