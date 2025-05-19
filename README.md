@@ -1,4 +1,4 @@
-<h1>Proyecto Django - Ferretería B2B <img src="https://github.com/user-attachments/assets/c78f78e6-bec6-44ab-a08a-f8258d0de698" alt="imagen del proyecto" width="80" height="80" />
+<h1>Proyecto Django - Ferretería B2B <img src="https://github.com/user-attachments/assets/c78f78e6-bec6-44ab-a08a-f8258d0de698" alt="imagen del proyecto" width="30" height="30" />
 </h1>
 <p>
 Este es un proyecto de Django para la gestión de productos y categorías en una ferretería B2B. 
