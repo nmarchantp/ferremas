@@ -11,6 +11,18 @@ Está desarrollado en Python (framework Django) con base de datos SQLite e integ
 </p>
 
 <h2>Arquitectura</h2>
+
+Elemento	Función principal
+HTML	Interfaz visual para el usuario
+JavaScript	Lógica en el navegador (AJAX, fetch, SPA)
+views.py	Recibe y responde solicitudes web tradicionales o JS
+api_views.py	Contiene la lógica de negocio reutilizable y endpoints JSON
+models.py	Representa las tablas de la base de datos
+
+Usuario ←→ HTML ←→ views.py (clientes/productos) ←→ api_views.py (lógica) ←→ models.py (DB)
+         ↑
+      JavaScript (opcional)
+
 <img src="https://github.com/user-attachments/assets/b27042be-9270-442b-a409-c8e0595d6bf0" alt="arquitectura del proyecto" />
 
 <h2>Requisitos Previos</h2>
