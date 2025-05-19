@@ -1,16 +1,12 @@
-import datetime
 import json
-from django.http import HttpResponse, JsonResponse
+from datetime import datetime, timedelta
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from transbank.webpay.webpay_plus.transaction import Transaction, WebpayOptions
-from transbank.common.integration_type import IntegrationType
-from transbank.common.options import WebpayOptions
+from django.shortcuts import render
 from django.conf import settings
-from django.shortcuts import redirect, render
 import bcchapi
-
-from datetime import datetime, timedelta
+from .transbank import transaction
 
 def convertir(request):
     # Obtener el monto en USD desde los parámetros de la solicitud GET
@@ -53,9 +49,6 @@ def convertir(request):
     # Devolver el monto en pesos chilenos como JSON
     return JsonResponse({'monto_clp': monto_clp, 'tasa_cambio': tasa_cambio})
 
-options = WebpayOptions(settings.TRANSBANK_COMMERCE_CODE, settings.TRANSBANK_API_KEY, IntegrationType.TEST)
-transaction = Transaction(options)
-
 @csrf_exempt
 @login_required(login_url='/clientes/ingreso/')
 def pagar(request):
@@ -66,11 +59,9 @@ def pagar(request):
         try:
             data = json.loads(request.body)
             amount = data.get('amount')
-
             if not amount:
                 return JsonResponse({"error": "Monto no proporcionado"}, status=400)
 
-            # Crea la transacción en Transbank
             response = transaction.create(
                 buy_order='orden123',
                 session_id=request.session.session_key,
@@ -78,17 +69,13 @@ def pagar(request):
                 return_url=settings.TRANSBANK_RETURN_URL
             )
 
-            redirect_url = response.get('url') + '?token_ws=' + response.get('token')
-            if redirect_url:
-                return JsonResponse({'redirect_url': redirect_url})
-            else:
-                return JsonResponse({'error': 'No se pudo obtener la URL de redirección'}, status=500)
+            redirect_url = f"{response.get('url')}?token_ws={response.get('token')}"
+            return JsonResponse({'redirect_url': redirect_url})
         
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Solicitud malformada. Se esperaba JSON.'}, status=400)
-    
-    return JsonResponse({'error': 'Método no permitido'}, status=405)
 
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 def transaccion_completa(request):
     token_ws = request.GET.get('token_ws')
@@ -103,6 +90,14 @@ def transaccion_completa(request):
     # Si la transacción fue exitosa
     if result.get('status') == 'AUTHORIZED':
         amount = result.get('amount')  # Obtén el monto de la transacción
+
+        #Limpiar carrito
+        if 'carrito' in request.session:
+            del request.session['carrito']
+        if 'cart_count' in request.session:
+            del request.session['cart_count']
+        request.session.modified = True
+
         return render(request, 'apis/success.html', {
             'token_ws': token_ws,
             'amount': amount

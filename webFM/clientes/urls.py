@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import registro, ingreso, logout_view, login_view
+from . import views
 
 urlpatterns = [
-    path('registro/', registro, name='registro'),
-    path('ingreso/', ingreso, name='ingreso'),
-    path('login/', login_view, name='login'), 
-    path('logout/', logout_view, name='logout'),
-
+    # Registro y autenticación
+    path('registro/', views.registro, name='registro'),
+    path('ingreso/', views.ingreso, name='ingreso'),      # Login por username
+    path('login/', views.login_view, name='login'),       # Login por email
+    path('logout/', views.logout_view, name='logout'),    # Cierre de sesión
 ]

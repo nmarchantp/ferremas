@@ -1,63 +1,68 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
-from django.contrib import messages
-from .models import Cliente
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+# Usar la API interna
+from apis.api_views import crear_cliente, autenticar_por_email
 
 
 def registro(request):
     if request.method == 'POST':
-        username = request.POST['username'] 
-        email = request.POST['email']
-        password = request.POST['password']
-        nombre = request.POST['nombre']
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        nombre = request.POST.get('nombre')
+
         try:
-            user = User.objects.create_user(username=username, email=email, password=password)
-            Cliente.objects.create(user=user, nombre=nombre)  # Crear el cliente asociado
+            crear_cliente(username, email, password, nombre)
             messages.success(request, "Registro exitoso.")
-            return redirect('ingreso')  # Redirigir después del registro exitoso
+            return redirect('ingreso')
         except Exception as e:
             messages.error(request, "Error en el registro: " + str(e))
+
     return render(request, 'clientes/registro.html')
+
 
 def ingreso(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
 
-        if user is not None:
+        if user:
             login(request, user)
-            return redirect('inicio')  # Redirigir a la página principal
+            return redirect('inicio')
         else:
             messages.error(request, "Usuario o contraseña incorrectos.")
-    
+
     return render(request, 'clientes/ingreso.html')
 
 
 def login_view(request):
     if request.method == 'POST':
-        email = request.POST.get('email')  # Obtener el correo electrónico
+        email = request.POST.get('email')
         password = request.POST.get('password')
 
-        # Buscar al usuario por correo electrónico
-        try:
-            user = User.objects.get(email=email)  # Obtener el usuario por su correo electrónico
-        except User.DoesNotExist:
-            user = None
+        user = autenticar_por_email(email, password)
 
-        # Autenticar con el nombre de usuario y la contraseña
-        if user and user.check_password(password):  # Verificar la contraseña
-            login(request, user)  # Iniciar sesión
-            return redirect('inicio')  # Redirige a la página principal
+        if user:
+            login(request, user)
+            return redirect('inicio')
         else:
             return render(request, 'clientes/ingreso.html', {'error': 'Credenciales incorrectas'})
 
     return render(request, 'clientes/ingreso.html')
 
+
 @login_required
 def logout_view(request):
     logout(request)
-    messages.success(request, "Has cerrado sesión.")  # Mensaje de éxito
-    return redirect('inicio')  # Redirigir a la página principal
+
+     #Limpiar carrito al salir
+    request.session['carrito'] = {}
+    request.session['cart_count'] = 0
+    request.session.modified = True
+
+    messages.success(request, "Has cerrado sesión.")
+    return redirect('inicio')
