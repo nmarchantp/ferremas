@@ -44,7 +44,7 @@ Está desarrollado en Python (framework Django) con base de datos SQLite e integ
 </table>
 
 
-Usuario ←→ HTML ←→ views.py (clientes/productos) ←→ api_views.py (lógica) ←→ models.py (DB)
+Usuario ←→ HTML ←→ views.py (clientes/productos) ←→ api_views.py (lógica) ←→ models.py (DB) <br>
          ↑
       JavaScript (opcional)
 
