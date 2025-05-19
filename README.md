@@ -12,12 +12,37 @@ Está desarrollado en Python (framework Django) con base de datos SQLite e integ
 
 <h2>Arquitectura</h2>
 
-Elemento	Función principal
-HTML	Interfaz visual para el usuario
-JavaScript	Lógica en el navegador (AJAX, fetch, SPA)
-views.py	Recibe y responde solicitudes web tradicionales o JS
-api_views.py	Contiene la lógica de negocio reutilizable y endpoints JSON
-models.py	Representa las tablas de la base de datos
+<table>
+  <thead>
+    <tr>
+      <th>Elemento</th>
+      <th>Función principal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>HTML</td>
+      <td>Interfaz visual para el usuario</td>
+    </tr>
+    <tr>
+      <td>JavaScript</td>
+      <td>Lógica en el navegador (AJAX, fetch, SPA)</td>
+    </tr>
+    <tr>
+      <td>views.py</td>
+      <td>Recibe y responde solicitudes web tradicionales o JS</td>
+    </tr>
+    <tr>
+      <td>api_views.py</td>
+      <td>Contiene la lógica de negocio reutilizable y endpoints JSON</td>
+    </tr>
+    <tr>
+      <td>models.py</td>
+      <td>Representa las tablas de la base de datos</td>
+    </tr>
+  </tbody>
+</table>
+
 
 Usuario ←→ HTML ←→ views.py (clientes/productos) ←→ api_views.py (lógica) ←→ models.py (DB)
          ↑
