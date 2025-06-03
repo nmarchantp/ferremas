@@ -32,18 +32,18 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error("El elemento carritoContenido no existe en el DOM.");
             return;
         }
-    
+
         carritoContenido.innerHTML = ''; // Limpiar contenido antes de actualizar
         let totalProductos = 0;
         let totalValor = 0;
-    
+
         for (const id in carrito) {
             const producto = carrito[id];
-    
+
             // Crear contenedor de cada producto en el carrito
             const item = document.createElement('div');
             item.classList.add('carrito-item');
-    
+
             // Imagen del producto
             const img = document.createElement('img');
             img.src = producto.imagen_producto;
@@ -54,27 +54,27 @@ document.addEventListener('DOMContentLoaded', function () {
             img.style.objectFit = 'cover';
             img.style.borderRadius = '8px';
             item.appendChild(img);
-    
+
             // Contenedor para nombre y precio
             const productoInfo = document.createElement('div');
             productoInfo.classList.add('producto-info');
-    
+
             // Nombre del producto
             const nombre = document.createElement('span');
             nombre.textContent = `${producto.nombre_producto} x ${producto.cantidad}`;
             productoInfo.appendChild(nombre);
-    
+
             // Precio del producto
             const precio = document.createElement('span');
             precio.textContent = `Precio: $${producto.precio}`;
             productoInfo.appendChild(precio);
-    
+
             item.appendChild(productoInfo);
-    
+
             // Controles de cantidad
             const cantidadControles = document.createElement('div');
             cantidadControles.classList.add('cantidad-controles');
-    
+
             // Botón para disminuir cantidad
             const btnDisminuir = document.createElement('button');
             btnDisminuir.textContent = '-';
@@ -89,12 +89,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 mostrarCarrito();
             });
             cantidadControles.appendChild(btnDisminuir);
-    
+
             // Cantidad actual
             const cantidad = document.createElement('span');
             cantidad.textContent = producto.cantidad;
             cantidadControles.appendChild(cantidad);
-    
+
             // Botón para aumentar cantidad
             const btnAumentar = document.createElement('button');
             btnAumentar.textContent = '+';
@@ -105,9 +105,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 mostrarCarrito();
             });
             cantidadControles.appendChild(btnAumentar);
-    
+
             item.appendChild(cantidadControles);
-    
+
             // Botón para eliminar producto
             const btnEliminar = document.createElement('button');
             btnEliminar.textContent = 'Eliminar';
@@ -118,17 +118,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 mostrarCarrito();
             });
             item.appendChild(btnEliminar);
-    
+
             carritoContenido.appendChild(item);
-    
+
             // Calcular el total en USD
             totalProductos += producto.cantidad;
             totalValor += producto.precio * producto.cantidad;
         }
-    
+
         // Redondear el total en USD a dos decimales
         const totalValorRedondeado = totalValor.toFixed(2);
-    
+
         // Actualizar o crear el elemento para el total en USD
         let totalElement = document.querySelector('.carrito-total');
         if (!totalElement) {
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
             carritoContenido.appendChild(totalElement);
         }
         totalElement.textContent = `Total: $${totalValorRedondeado}`;
-    
+
         // Obtener y mostrar el total en CLP
         const totalEnCLP = await obtenerTasaConversion(totalValor);
         let totalCLPElement = document.querySelector('.carrito-total-clp');
@@ -146,11 +146,11 @@ document.addEventListener('DOMContentLoaded', function () {
             totalCLPElement.classList.add('carrito-total-clp');
             carritoContenido.appendChild(totalCLPElement);
         }
-    
+
         if (totalEnCLP !== null) {
             const totalEnCLPAbsoluto = Math.round(totalEnCLP);
             totalCLPElement.textContent = `Total en CLP: $${totalEnCLPAbsoluto}`;
-    
+
             // Crear o actualizar el botón de pago
             let pagarButton = document.querySelector('.btn-pagar');
             if (!pagarButton) {
@@ -159,47 +159,60 @@ document.addEventListener('DOMContentLoaded', function () {
                 pagarButton.textContent = "Pagar con Transbank";
                 carritoContenido.appendChild(pagarButton);
             }
-    
+
             // Agregar evento para iniciar el pago
             pagarButton.onclick = () => iniciarPago(totalEnCLPAbsoluto);
         } else {
             console.warn("No se pudo calcular el total en pesos chilenos.");
         }
     }
-    
-    
-    // Función para iniciar el pago enviando el monto en CLP a la vista de Django
-    function iniciarPago(montoCLP) {
-    fetch('http://127.0.0.1:8000/api/webpay/pagar/', {
-        method: 'POST',
-        credentials: 'include',  // <- esto mantiene la sesión si usas cookies
-        headers: { 
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ amount: montoCLP })
-    })
-    .then(response => {
-        const contentType = response.headers.get("content-type");
 
-        if (!response.ok) {
-            throw new Error(`Error ${response.status}: ${response.statusText}`);
-        } else if (contentType && contentType.includes("application/json")) {
-            return response.json();
-        } else {
-            throw new Error("Respuesta inesperada del servidor. Se esperaba JSON.");
+
+    // Función para iniciar el pago enviando el monto en CLP a la vista de Django
+    async function iniciarPago(montoCLP) {
+        if (!montoCLP || isNaN(montoCLP) || montoCLP <= 0) {
+            alert("Monto inválido. Debe ser un número mayor a 0.");
+            return;
         }
-    })
-    .then(data => {
-        if (data && data.redirect_url) {
-            window.location.href = data.redirect_url;
-        } else {
-            alert("Debes iniciar sesión antes de pagar.");
-            window.location.href = "/clientes/login/"; // Redirige al login del frontend
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/webpay/pagar/', { // 
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ amount: montoCLP })
+            });
+
+            const contentType = response.headers.get("content-type");
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Error ${response.status}: ${errorText}`);
+            }
+
+            if (!contentType || !contentType.includes("application/json")) {
+                throw new Error("Respuesta inesperada del servidor. Se esperaba JSON.");
+            }
+
+            const data = await response.json();
+
+            if (data.redirect_url) {
+                window.location.href = data.redirect_url;
+            } else if (data.error) {
+                alert(`Error al iniciar el pago: ${data.error}`);
+            } else {
+                alert("Debes iniciar sesión antes de pagar.");
+                window.location.href = "/clientes/login/";
+            }
+
+        } catch (error) {
+            console.error("Error al iniciar el pago:", error);
+            alert("Hubo un problema al procesar el pago. Intenta nuevamente.");
         }
-    })
-    .catch(error => console.error("Error al iniciar el pago:", error));
-}
-    
+    }
+
     // Cargar el carrito al cargar la página
     mostrarCarrito();
 

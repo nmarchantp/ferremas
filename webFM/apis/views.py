@@ -9,40 +9,49 @@ from django.conf import settings
 
 
 @csrf_exempt
-def pagar(request):
+def pagar_transbank(request):
     if request.method == 'POST':
-
         if 'cliente' not in request.session:
-            return JsonResponse({'error': 'Debes iniciar sesión para pagar.'}, status=403)
+            return JsonResponse({'error': 'Debes iniciar sesión'}, status=403)
 
-        try:
-            data = json.loads(request.body)
-            amount = data.get('amount')
+        data = json.loads(request.body)
+        amount = data.get('amount')
+        session_id = request.session.session_key or 'anon'
+        orden_compra = f"orden-{session_id[:8]}"
 
-            if not amount:
-                return JsonResponse({"error": "Monto no proporcionado"}, status=400)
+        response = requests.post(
+            'http://127.0.0.1:8001/api/webpay/pagar/',
+            json={'amount': amount, 'orden_compra': orden_compra},
+            headers={'Content-Type': 'application/json'}
+        )
 
-            # Usa datos de sesión como session_id si es necesario
-            session_id = request.session.session_key or 'anon'
-
-            # Llamada a la API REST para iniciar la transacción
-            response = requests.post(
-                "http://localhost:8000/api/webpay/pagar/",
-                json={"amount": amount, "session_id": session_id},
-                headers={"Content-Type": "application/json"}
-            )
-
-            if response.status_code == 200:
-                data = response.json()
-                redirect_url = f"{data['url']}?token_ws={data['token']}"
-                return JsonResponse({"redirect_url": redirect_url})
-            else:
-                return JsonResponse({"error": "No se pudo iniciar el pago"}, status=500)
-
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Solicitud malformada. Se esperaba JSON.'}, status=400)
+        if response.status_code == 200:
+            r = response.json()
+            return JsonResponse({'redirect_url': f"{r['url']}?token_ws={r['token']}"})
+        else:
+            return JsonResponse({'error': 'Error en API externa'}, status=500)
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+
+@csrf_exempt
+def pago_exito(request):
+    token_ws = request.GET.get('token_ws')
+    if not token_ws:
+        return render(request, 'pago_fallido.html', {'mensaje': 'Token no entregado'})
+
+    response = requests.post(
+        'http://127.0.0.1:8001/api/webpay/confirmar/',
+        json={'token_ws': token_ws},
+        headers={'Content-Type': 'application/json'}
+    )
+
+    resultado = response.json()
+
+    if response.status_code == 200:
+        return render(request, 'pago_exitoso.html', {'resultado': resultado})
+    else:
+        return render(request, 'pago_fallido.html', {'mensaje': resultado.get('error', 'Error desconocido')})
 
 
 def convertir(request):
