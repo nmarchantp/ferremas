@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Listado de Categorías</h2>
+  <ul>
+    {% for categoria in object_list %}
+      <li>{{ categoria.nombre_categoria }}</li>
+    {% empty %}
+      <li>No hay categorías registradas.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

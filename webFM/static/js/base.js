@@ -170,39 +170,35 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // Función para iniciar el pago enviando el monto en CLP a la vista de Django
     function iniciarPago(montoCLP) {
-        fetch('/api/pagar/', {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value 
-            },
-            body: JSON.stringify({ amount: montoCLP })
-        })
-        .then(response => {
-            // Detectar si estamos siendo redirigidos a la página de inicio de sesión
-            if (response.redirected && response.url.includes('/clientes/ingreso/')) {
-                window.location.href = response.url;  // Redirigir a la página de inicio de sesión
-                return;
-            }
-    
-            const contentType = response.headers.get("content-type");
-            if (!response.ok) {
-                throw new Error(`Error ${response.status}: ${response.statusText}`);
-            } else if (contentType && contentType.includes("application/json")) {
-                return response.json();
-            } else {
-                throw new Error("Respuesta inesperada del servidor. Se esperaba JSON.");
-            }
-        })
-        .then(data => {
-            if (data && data.redirect_url) {
-                window.location.href = data.redirect_url;
-            } else {
-                alert("Debes registrarte antes de comprar!... Serás redireccionado");
-            }
-        })
-        .catch(error => console.error("Error al iniciar el pago:", error));
-    }
+    fetch('http://127.0.0.1:8000/api/webpay/pagar/', {
+        method: 'POST',
+        credentials: 'include',  // <- esto mantiene la sesión si usas cookies
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ amount: montoCLP })
+    })
+    .then(response => {
+        const contentType = response.headers.get("content-type");
+
+        if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
+        } else if (contentType && contentType.includes("application/json")) {
+            return response.json();
+        } else {
+            throw new Error("Respuesta inesperada del servidor. Se esperaba JSON.");
+        }
+    })
+    .then(data => {
+        if (data && data.redirect_url) {
+            window.location.href = data.redirect_url;
+        } else {
+            alert("Debes iniciar sesión antes de pagar.");
+            window.location.href = "/clientes/login/"; // Redirige al login del frontend
+        }
+    })
+    .catch(error => console.error("Error al iniciar el pago:", error));
+}
     
     // Cargar el carrito al cargar la página
     mostrarCarrito();

@@ -1,0 +1,16 @@
+<h2>Registro</h2>
+
+{% if error.email %}
+  <p style="color:red;">{{ error.email }}</p>
+{% elif error %}
+  <p style="color:red;">{{ error }}</p>
+{% endif %}
+
+<form method="POST">
+  {% csrf_token %}
+  <input type="text" name="username" placeholder="Usuario" required><br>
+  <input type="email" name="email" placeholder="Correo" required><br>
+  <input type="text" name="nombre" placeholder="Nombre completo"><br>
+  <input type="password" name="password" placeholder="Contraseña" required><br>
+  <button type="submit">Registrarse</button>
+</form>

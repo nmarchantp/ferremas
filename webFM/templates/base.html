@@ -39,8 +39,8 @@
 
                 <!-- Autenticación del usuario -->
                 <div class="d-flex align-items-center">
-                    {% if user.is_authenticated %}
-                        <span class="navbar-text me-3" style="color: white;">Hola, {{ user.username }}!</span>
+                    {% if cliente_logeado %}
+                        <span class="navbar-text me-3" style="color: white;">Hola, {{ cliente_logeado.nombre }}!</span>
                         <a class="nav-link" href="{% url 'logout' %}" style="color: white; font-weight: normal;">Cerrar sesión</a>
                     {% else %}
                         <a class="nav-link ms-4" id="log-in-btn" href="{% url 'ingreso' %}">
@@ -52,8 +52,9 @@
                     {% endif %}
                 </div>
 
+
                 <!-- Ícono del carrito de compras -->
-                {% if not user.is_authenticated or not user.is_staff %}
+                {% if cliente_logeado %}
                 <div class="nav-item">
                     <!-- Carrito lateral (offcanvas) -->
                     <a class="nav-link" data-bs-toggle="offcanvas" href="#offcanvasCarrito" role="button" aria-controls="offcanvasCarrito">
