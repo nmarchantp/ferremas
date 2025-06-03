@@ -5,7 +5,9 @@ Incluye funcionalidades para la administración de categorías, productos y un s
 para acceder al panel de administración.
 
 Está desarrollado en Python (framework Django) que consume una API con base de datos SQLite e integración con Banco Central y Transbank Webpay Plus.
-**https://github.com/nmarchantp/API-ferremas_**
+<a href="https://github.com/nmarchantp/API-ferremas_">Visitar el sitio web</a>
+
+
 
 ---
 
