@@ -4,7 +4,8 @@ Este es un proyecto de Django para la gestión de productos y categorías en una
 Incluye funcionalidades para la administración de categorías, productos y un sistema de autenticación
 para acceder al panel de administración.
 
-Está desarrollado en Python (framework Django) con base de datos SQLite e integración con Banco Central y Transbank Webpay Plus.
+Está desarrollado en Python (framework Django) que consume una API con base de datos SQLite e integración con Banco Central y Transbank Webpay Plus.
+https://github.com/nmarchantp/API-ferremas_
 
 ---
 
@@ -15,7 +16,7 @@ Está desarrollado en Python (framework Django) con base de datos SQLite e integ
 | 🌐 **HTML**          | Interfaz visual para el usuario                             |
 | 🧠 **JavaScript**    | Lógica en el navegador (AJAX, fetch, SPA)                   |
 | 🥭 **views.py**      | Recibe y responde solicitudes web tradicionales o JS        |
-| 🔁 **api\_views.py** | Contiene la lógica de negocio reutilizable y endpoints JSON |
+| 🔁 **API-ferremas ** | Contiene la lógica de negocio reutilizable y endpoints JSON |
 | 📃 **models.py**     | Representa las tablas de la base de datos                   |
 
 ```
@@ -25,7 +26,7 @@ Está desarrollado en Python (framework Django) con base de datos SQLite e integ
    ↓
 🥭 views.py (maneja la petición)
    ↓
-🔁 api_views.py (lógica reutilizable)
+🔁 API-ferremas (lógica reutilizable)
    ↓
 📃 models.py (base de datos)
 
