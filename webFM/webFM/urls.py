@@ -20,6 +20,7 @@ from django.urls import path, include
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from apis.views import pagar_transbank
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,5 +29,6 @@ urlpatterns = [
     path('catalogo/', views.catalogo, name='catalogo'),
     path('contacto/', views.contacto, name='contacto'),
     path('clientes/', include('clientes.urls')),
+    path('pagar/', pagar_transbank, name='pagar_transbank'),
     path('api/', include('apis.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

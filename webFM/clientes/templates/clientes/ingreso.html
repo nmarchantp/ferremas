@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
+
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/ingreso.css' %}">  {# Asegúrate de incluir tu CSS aquí #}
 {% endblock %}
@@ -59,5 +60,6 @@
             </div>
         </form>
     </div>
+<p id="loginError" class="text-danger mt-3"></p>
 
-    {% endblock %}
+{% endblock %}

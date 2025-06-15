@@ -4,6 +4,23 @@ document.addEventListener('DOMContentLoaded', function () {
     const carritoOffcanvasElement = document.getElementById('offcanvasCarrito');
     const carritoOffcanvas = new bootstrap.Offcanvas(carritoOffcanvasElement); // Inicializar el offcanvas de Bootstrap
 
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Coincide con csrftoken
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+    
+
     // Eliminar manualmente el backdrop cuando el offcanvas se oculta
     carritoOffcanvasElement.addEventListener('hidden.bs.offcanvas', function () {
         document.querySelectorAll('.offcanvas-backdrop').forEach(backdrop => backdrop.remove());
@@ -161,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             // Agregar evento para iniciar el pago
-            pagarButton.onclick = () => iniciarPago(totalEnCLPAbsoluto);
+            pagarButton.onclick = () => iniciarPagoConTransbank(totalEnCLPAbsoluto);
         } else {
             console.warn("No se pudo calcular el total en pesos chilenos.");
         }
@@ -169,49 +186,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // Función para iniciar el pago enviando el monto en CLP a la vista de Django
-    async function iniciarPago(montoCLP) {
-        if (!montoCLP || isNaN(montoCLP) || montoCLP <= 0) {
-            alert("Monto inválido. Debe ser un número mayor a 0.");
-            return;
-        }
-
-        try {
-            const response = await fetch('http://127.0.0.1:8000/api/webpay/pagar/', { // 
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ amount: montoCLP })
-            });
-
-            const contentType = response.headers.get("content-type");
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Error ${response.status}: ${errorText}`);
-            }
-
-            if (!contentType || !contentType.includes("application/json")) {
-                throw new Error("Respuesta inesperada del servidor. Se esperaba JSON.");
-            }
-
-            const data = await response.json();
-
-            if (data.redirect_url) {
-                window.location.href = data.redirect_url;
-            } else if (data.error) {
-                alert(`Error al iniciar el pago: ${data.error}`);
-            } else {
-                alert("Debes iniciar sesión antes de pagar.");
-                window.location.href = "/clientes/login/";
-            }
-
-        } catch (error) {
-            console.error("Error al iniciar el pago:", error);
-            alert("Hubo un problema al procesar el pago. Intenta nuevamente.");
-        }
+    async function iniciarPagoConTransbank(montoCLP) {
+    if (!montoCLP || isNaN(montoCLP) || montoCLP <= 0) {
+        alert("Monto inválido. Debe ser mayor que cero.");
+        return;
     }
+
+    try {
+        const response = await fetch('/pagar/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')  // usa esta función si tienes CSRF habilitado
+            },
+            body: JSON.stringify({ amount: montoCLP })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.redirect_url) {
+            window.location.href = data.redirect_url;  // redirige a Webpay
+        } else {
+            alert(data.error || "Error al iniciar el pago");
+        }
+
+    } catch (error) {
+        console.error("Error al pagar:", error);
+        alert("Hubo un problema al intentar iniciar el pago.");
+    }
+}
+
 
     // Cargar el carrito al cargar la página
     mostrarCarrito();
